@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Interactiva con Opción de Borrar</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .calculator-card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #4a90e2;
+        }
+
+        .btn-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-sumar { background-color: #2ecc71; }
+        .btn-sumar:hover { background-color: #27ae60; }
+
+        .btn-restar { background-color: #e74c3c; }
+        .btn-restar:hover { background-color: #c0392b; }
+
+        .btn-multiplicar { background-color: #f39c12; }
+        .btn-multiplicar:hover { background-color: #d35400; }
+
+        .btn-dividir { background-color: #3498db; }
+        .btn-dividir:hover { background-color: #2980b9; }
+
+        /* Botón de borrar ocupa todo el ancho de la rejilla */
+        .btn-borrar {
+            background-color: #7f8c8d;
+            grid-column: span 2;
+            margin-top: 5px;
+        }
+        .btn-borrar:hover { background-color: #95a5a6; }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #4a90e2;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .result-box p {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .result-box span {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-card">
+        <h2>Calculadora</h2>
+       
+        <div class="input-group">
+            <label for="num1">Primer Número</label>
+            <input type="number" id="num1" placeholder="Ej. 12">
+        </div>
+
+        <div class="input-group">
+            <label for="num2">Segundo Número</label>
+            <input type="number" id="num2" placeholder="Ej. 4">
+        </div>
+
+        <div class="btn-container">
+            <button class="btn-sumar" onclick="calcular('sumar')">Sumar (+)</button>
+            <button class="btn-restar" onclick="calcular('restar')">Restar (-)</button>
+            <button class="btn-multiplicar" onclick="calcular('multiplicar')">Multiplicar (×)</button>
+            <button class="btn-dividir" onclick="calcular('dividir')">Dividir (÷)</button>
+            <button class="btn-borrar" onclick="borrarCampos()">Borrar Todo (C)</button>
+        </div>
+
+        <div class="result-box">
+            <p>Resultado:</p>
+            <span id="resultado">0</span>
+        </div>
+    </div>
+
+    <script>
+        function calcular(operacion) {
+            const input1 = document.getElementById('num1');
+            const input2 = document.getElementById('num2');
+            const contenedorResultado = document.getElementById('resultado');
+
+            // Convertimos a números flotantes
+            const n1 = parseFloat(input1.value);
+            const n2 = parseFloat(input2.value);
+
+            // Validación: Verificar si los campos están vacíos o no son válidos
+            if (isNaN(n1) || !input1.value || isNaN(n2) || !input2.value) {
+                contenedorResultado.innerText = "Error: Ingresa ambos números";
+                contenedorResultado.style.color = "#e74c3c";
+                return;
+            }
+
+            let resultado = 0;
+
+            switch (operacion) {
+                case 'sumar':
+                    resultado = n1 + n2;
+                    break;
+                case 'restar':
+                    resultado = n1 - n2;
+                    break;
+                case 'multiplicar':
+                    resultado = n1 * n2;
+                    break;
+                case 'dividir':
+                    // Validación para evitar división entre cero
+                    if (n2 === 0) {
+                        contenedorResultado.innerText = "Error: No se puede dividir por 0";
+                        contenedorResultado.style.color = "#e74c3c";
+                        return;
+                    }
+                    resultado = n1 / n2;
+                    break;
+            }
+
+            // Muestra el resultado final (limitando a 4 decimales si es necesario)
+            contenedorResultado.innerText = Number(resultado.toFixed(4));
+            contenedorResultado.style.color = "#333";
+        }
+
+        // Nueva función para borrar y resetear los campos
+        function borrarCampos() {
+            const input1 = document.getElementById('num1');
+            const input2 = document.getElementById('num2');
+            const contenedorResultado = document.getElementById('resultado');
+
+            // Limpia los valores de texto de los inputs
+            input1.value = "";
+            input2.value = "";
+
+            // Restablece el recuadro de resultados
+            contenedorResultado.innerText = "0";
+            contenedorResultado.style.color = "#333";
+
+            // Coloca el cursor automáticamente en el primer input para volver a escribir
+            input1.focus();
+        }
+    </script>
+
+</body>
+</html>
