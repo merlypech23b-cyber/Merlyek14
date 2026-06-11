@@ -25,8 +25,8 @@
             overflow: hidden;
         }
 
-        /* Medias lunas decorativas */
-        .media-luna-top {
+        /* Luna creciente superior derecha */
+        .luna-top {
             position: absolute;
             top: -30px;
             right: -30px;
@@ -37,7 +37,8 @@
             opacity: 0.3;
         }
 
-        .media-luna-bottom {
+        /* Luna creciente inferior izquierda */
+        .luna-bottom {
             position: absolute;
             bottom: -30px;
             left: -30px;
@@ -66,7 +67,6 @@
 
         .grupo-input {
             margin-bottom: 20px;
-            position: relative;
         }
 
         label {
@@ -93,19 +93,6 @@
             background-color: #fff;
             outline: none;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        /* Media luna en input */
-        .grupo-input::before {
-            content: '';
-            position: absolute;
-            left: -8px;
-            top: 38px;
-            width: 20px;
-            height: 20px;
-            background-color: #667eea;
-            border-radius: 0 20px 20px 0;
-            opacity: 0.2;
         }
 
         .botones-operacion {
@@ -177,20 +164,6 @@
             border-left: 5px solid #667eea;
             border-radius: 15px;
             text-align: center;
-            position: relative;
-        }
-
-        /* Media luna en resultado */
-        .resultado-box::after {
-            content: '';
-            position: absolute;
-            right: -15px;
-            top: -15px;
-            width: 40px;
-            height: 40px;
-            background-color: #667eea;
-            border-radius: 0 0 0 40px;
-            opacity: 0.15;
         }
 
         .resultado-box h3 {
@@ -206,16 +179,14 @@
             font-weight: bold;
             color: #333;
             word-break: break-all;
-            position: relative;
-            z-index: 1;
         }
     </style>
 </head>
 <body>
 
 <div class="calculadora-container">
-    <div class="media-luna-top"></div>
-    <div class="media-luna-bottom"></div>
+    <div class="luna-top"></div>
+    <div class="luna-bottom"></div>
     
     <div class="content">
         <h2>🧮 Calculadora</h2>
