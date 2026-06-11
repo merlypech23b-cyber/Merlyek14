@@ -6,23 +6,173 @@
     <meta name="description" content="Calculadora simple para operaciones básicas">
     <title>Simulador de Calculadora</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(180deg, #0a1e3e 0%, #1a3a52 50%, #2d5a73 100%);
+            position: relative;
+        }
+
+        /* Fondo de cielo nocturno con nubes y lunas */
+        .night-sky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        /* Estrellas */
+        .star {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Medias lunas */
+        .moon {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #fff9e6, #ffe680);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 242, 150, 0.6);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .moon:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            width: 100px;
+            height: 100px;
+            animation-delay: 0s;
+        }
+
+        .moon:nth-child(2) {
+            top: 70%;
+            right: 5%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        /* Nubes animadas */
+        .clouds-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .cloud {
+            position: absolute;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.8) 0%, rgba(200, 220, 255, 0.4) 100%);
+            border-radius: 100px;
+            opacity: 0.7;
+            animation: drift 20s linear infinite;
+        }
+
+        .cloud::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.8) 0%, rgba(200, 220, 255, 0.4) 100%);
+            border-radius: 100px;
+        }
+
+        .cloud::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.8) 0%, rgba(200, 220, 255, 0.4) 100%);
+            border-radius: 100px;
+        }
+
+        .cloud:nth-child(3) {
+            top: 10%;
+            left: -200px;
+            width: 200px;
+            height: 60px;
+            animation-duration: 25s;
+            animation-delay: 0s;
+        }
+
+        .cloud:nth-child(4) {
+            top: 35%;
+            left: -300px;
+            width: 250px;
+            height: 70px;
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+
+        .cloud:nth-child(5) {
+            top: 60%;
+            left: -250px;
+            width: 220px;
+            height: 65px;
+            animation-duration: 28s;
+            animation-delay: -10s;
+        }
+
+        @keyframes drift {
+            0% { transform: translateX(0px); }
+            100% { transform: translateX(calc(100vw + 400px)); }
         }
 
         .calculadora-container {
             background-color: #ffffff;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.4);
             width: 100%;
             max-width: 350px;
+            position: relative;
+            z-index: 10;
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         h2 {
@@ -138,6 +288,20 @@
 </head>
 <body>
 
+<!-- Fondo nocturno animado -->
+<div class="night-sky">
+    <div class="clouds-container">
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+        <div class="cloud"></div>
+    </div>
+    <div class="moon"></div>
+    <div class="moon"></div>
+</div>
+
+<!-- Contenedor de la calculadora -->
 <div class="calculadora-container">
     <h2>🧮 Calculadora</h2>
     
@@ -166,6 +330,21 @@
 </div>
 
 <script>
+    // Generar estrellas aleatorias
+    function crearEstrellas() {
+        const sky = document.querySelector('.night-sky');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            sky.appendChild(star);
+        }
+    }
+
+    crearEstrellas();
+
     const num1Input = document.getElementById('num1');
     const num2Input = document.getElementById('num2');
     const resultadoDiv = document.getElementById('resultado');
