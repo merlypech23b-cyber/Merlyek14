@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculadora simple para operaciones básicas">
+    <title>Simulador de Calculadora</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calculadora-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .grupo-input {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #4caf50;
+            outline: none;
+            background-color: #f9fff9;
+        }
+
+        .botones-operacion {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-op {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .btn-op:hover:not(:disabled) {
+            background-color: #45a049;
+        }
+
+        .btn-limpiar {
+            grid-column: span 2;
+            background-color: #f44336;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .btn-limpiar:hover {
+            background-color: #da190b;
+        }
+
+        .resultado-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .resultado-box h3 {
+            margin: 0;
+            color: #2e7d32;
+            font-size: 18px;
+        }
+
+        #resultado {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+            word-break: break-all;
+            color: #1b5e20;
+        }
+
+        .error {
+            color: #d32f2f;
+            background-color: #ffebee !important;
+            border-left-color: #d32f2f !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculadora-container">
+    <h2>🧮 Calculadora</h2>
+    
+    <div class="grupo-input">
+        <label for="num1">Primer Número:</label>
+        <input type="number" id="num1" placeholder="Ej. 10">
+    </div>
+    
+    <div class="grupo-input">
+        <label for="num2">Segundo Número:</label>
+        <input type="number" id="num2" placeholder="Ej. 5">
+    </div>
+
+    <div class="botones-operacion">
+        <button class="btn-op" id="btnSumar" onclick="calcular('sumar')">Sumar (+)</button>
+        <button class="btn-op" id="btnRestar" onclick="calcular('restar')">Restar (-)</button>
+        <button class="btn-op" id="btnMultiplicar" onclick="calcular('multiplicar')">Multiplicar (×)</button>
+        <button class="btn-op" id="btnDividir" onclick="calcular('dividir')">Dividir (÷)</button>
+        <button class="btn-limpiar" onclick="limpiar()">Limpiar pantalla</button>
+    </div>
+
+    <div class="resultado-box" id="resultadoBox">
+        <h3>Resultado:</h3>
+        <div id="resultado">-</div>
+    </div>
+</div>
+
+<script>
+    const num1Input = document.getElementById('num1');
+    const num2Input = document.getElementById('num2');
+    const resultadoDiv = document.getElementById('resultado');
+    const resultadoBox = document.getElementById('resultadoBox');
+    const botonesOperacion = document.querySelectorAll('.btn-op');
+
+    // Validar habilitación de botones cuando el usuario escribe
+    function validarEntradas() {
+        const num1 = num1Input.value.trim();
+        const num2 = num2Input.value.trim();
+        const sonValidos = num1 !== '' && num2 !== '';
+        
+        botonesOperacion.forEach(btn => {
+            btn.disabled = !sonValidos;
+        });
+    }
+
+    num1Input.addEventListener('input', validarEntradas);
+    num2Input.addEventListener('input', validarEntradas);
+
+    function calcular(operacion) {
+        const num1 = parseFloat(num1Input.value);
+        const num2 = parseFloat(num2Input.value);
+
+        // Validar que ambos números sean válidos
+        if (isNaN(num1) || isNaN(num2)) {
+            mostrarError('Por favor ingresa ambos números válidos');
+            return;
+        }
+
+        let resultado;
+
+        switch(operacion) {
+            case 'sumar':
+                resultado = num1 + num2;
+                break;
+            case 'restar':
+                resultado = num1 - num2;
+                break;
+            case 'multiplicar':
+                resultado = num1 * num2;
+                break;
+            case 'dividir':
+                if (num2 === 0) {
+                    mostrarError('Error: No se puede dividir entre 0');
+                    return;
+                }
+                resultado = num1 / num2;
+                break;
+            default:
+                mostrarError('Operación no válida');
+                return;
+        }
+
+        // Limitar decimales a 2 lugares
+        if (!Number.isInteger(resultado)) {
+            resultado = Math.round(resultado * 100) / 100;
+        }
+
+        mostrarResultado(resultado);
+    }
+
+    function mostrarResultado(resultado) {
+        resultadoDiv.textContent = resultado;
+        resultadoBox.classList.remove('error');
+    }
+
+    function mostrarError(mensaje) {
+        resultadoDiv.textContent = mensaje;
+        resultadoBox.classList.add('error');
+    }
+
+    function limpiar() {
+        num1Input.value = '';
+        num2Input.value = '';
+        resultadoDiv.textContent = '-';
+        resultadoBox.classList.remove('error');
+        validarEntradas();
+    }
+
+    // Validar al cargar la página
+    validarEntradas();
+</script>
+
+</body>
+</html>
