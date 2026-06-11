@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Calculadora</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calculadora-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .grupo-input {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #4caf50;
+            outline: none;
+        }
+
+        .botones-operacion {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-op {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .btn-op:hover {
+            background-color: #45a049;
+        }
+
+        .btn-limpiar {
+            grid-column: span 2;
+            background-color: #f44336;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .btn-limpiar:hover {
+            background-color: #da190b;
+        }
+
+        .resultado-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .resultado-box h3 {
+            margin: 0;
+            color: #2e7d32;
+            font-size: 18px;
+        }
+
+        #resultado {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculadora-container">
+    <h2>Calculadora</h2>
+    
+    <div class="grupo-input">
+        <label for="num1">Primer Número:</label>
+        <input type="number" id="num1" placeholder="Ej. 10">
+    </div>
+    
+    <div class="grupo-input">
+        <label for="num2">Segundo Número:</label>
+        <input type="number" id="num2" placeholder="Ej. 5">
+    </div>
+
+    <div class="botones-operacion">
+        <button class="btn-op" onclick="calcular('sumar')">Sumar (+)</button>
+        <button class="btn-op" onclick="calcular('restar')">Restar (-)</button>
+        <button class="btn-op" onclick="calcular('multiplicar')">Multiplicar (×)</button>
+        <button class="btn-op" onclick="calcular('dividir')">Dividir (÷)</button>
+        <button class="btn-limpiar" onclick="limpiar()">Limpiar pantalla
